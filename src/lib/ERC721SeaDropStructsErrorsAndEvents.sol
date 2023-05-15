@@ -15,6 +15,14 @@ interface ERC721SeaDropStructsErrorsAndEvents {
   error MintQuantityExceedsMaxSupply(uint256 total, uint256 maxSupply);
 
   /**
+   * @notice Revert with an error if mint exceeds the max batch.
+   */
+  error MintQuantityExceedsMaxBatch(uint256 total, uint256 maxBatch);
+
+  error TokenIsNotOwned(uint256 tokenId);
+  error TokenAlreadyUsed(uint256 tokenId);
+
+  /**
    * @notice Revert with an error if the number of token gated 
    *         allowedNftTokens doesn't match the length of supplied
    *         drop stages.
@@ -31,6 +39,7 @@ interface ERC721SeaDropStructsErrorsAndEvents {
    * @notice An event to signify that a SeaDrop token contract was deployed.
    */
   event SeaDropTokenDeployed();
+  event TokenUsed(uint256 indexed tokenId);
 
   /**
    * @notice A struct to configure multiple contract options at a time.

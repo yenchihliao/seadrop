@@ -11,6 +11,12 @@ interface ISeaDropTokenContractMetadata is IERC2981 {
     error CannotExceedMaxSupplyOfUint64(uint256 newMaxSupply);
 
     /**
+     * @notice Throw if the max supply exceeds maxSupply, setting
+     *         maxBatch greater than maxSupply is redundant.
+     */
+    error CannotExceedMaxSupply(uint256 newMaxBatch);
+
+    /**
      * @dev Revert with an error when attempting to set the provenance
      *      hash after the mint has started.
      */
@@ -45,6 +51,12 @@ interface ISeaDropTokenContractMetadata is IERC2981 {
      * @dev Emit an event when the max token supply is updated.
      */
     event MaxSupplyUpdated(uint256 newMaxSupply);
+
+    /**
+     * @dev Emit an event when the max batch that can be mint at
+     *      once is updated.
+     */
+    event MaxBatchUpdated(uint256 newMaxBatch);
 
     /**
      * @dev Emit an event with the previous and new provenance hash after

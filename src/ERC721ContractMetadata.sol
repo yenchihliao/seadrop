@@ -6,6 +6,7 @@ import {
 } from "./interfaces/ISeaDropTokenContractMetadata.sol";
 
 import { ERC721A } from "ERC721A/ERC721A.sol";
+// import { ERC721AQueryable } from "ERC721A//extensions/ERC721AQueryable.sol";
 
 import { TwoStepOwnable } from "utility-contracts/TwoStepOwnable.sol";
 
@@ -30,6 +31,9 @@ contract ERC721ContractMetadata is
 {
     /// @notice Track the max supply.
     uint256 _maxSupply;
+
+    /// @notice Track the max batch mint at once.
+    uint256 _maxBatch;
 
     /// @notice Track the base URI for token metadata.
     string _tokenBaseURI;
@@ -139,6 +143,27 @@ contract ERC721ContractMetadata is
     }
 
     /**
+     * @notice Sets the max token supply and emits an event.
+     *
+     * @param newMaxBatch The new max batch being able to mint at once.
+     */
+    function setMaxBatch(uint256 newMaxBatch) external {
+        // Ensure the sender is only the owner or contract itself.
+        _onlyOwnerOrSelf();
+
+        // Ensure the max supply does not exceed the maximum value of uint64.
+        if (newMaxBatch > _maxSupply) {
+            revert CannotExceedMaxSupply(newMaxBatch);
+        }
+
+        // Set the new max supply.
+        _maxBatch = newMaxBatch;
+
+        // Emit an event with the update.
+        emit MaxBatchUpdated(newMaxBatch);
+    }
+
+    /**
      * @notice Sets the provenance hash and emits an event.
      *
      *         The provenance hash is used for random reveals, which
@@ -221,6 +246,13 @@ contract ERC721ContractMetadata is
      */
     function maxSupply() public view returns (uint256) {
         return _maxSupply;
+    }
+
+    /**
+     * @notice Returns the max batch that can be mint at once.
+     */
+    function maxBatch() public view returns (uint256) {
+        return _maxBatch;
     }
 
     /**

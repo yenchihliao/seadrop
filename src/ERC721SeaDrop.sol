@@ -35,6 +35,8 @@ import {
     DefaultOperatorFilterer
 } from "operator-filter-registry/DefaultOperatorFilterer.sol";
 
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 /**
  * @title  ERC721SeaDrop
  * @author James Wenzel (emo.eth)
@@ -49,10 +51,14 @@ contract ERC721SeaDrop is
     INonFungibleSeaDropToken,
     ERC721SeaDropStructsErrorsAndEvents,
     ReentrancyGuard,
+    Pausable,
     DefaultOperatorFilterer
 {
     /// @notice Track the allowed SeaDrop addresses.
     mapping(address => bool) internal _allowedSeaDrop;
+
+    /// @notice Track the used tokens by tokenId.
+    mapping(uint256 => bool) public tokenUsed;
 
     /// @notice Track the enumerated allowed SeaDrop addresses.
     address[] internal _enumeratedAllowedSeaDrop;
@@ -97,6 +103,34 @@ contract ERC721SeaDrop is
         emit SeaDropTokenDeployed();
     }
 
+    function emergencyPause() public onlyOwner {
+      _pause();
+    }
+
+    function emergencyUnpause() public onlyOwner {
+      _unpause();
+    }
+
+    function _beforeTokenTransfers(
+        address from,
+        address to,
+        uint256 startTokenId,
+        uint256 quantity
+    ) internal override whenNotPaused {
+        super._beforeTokenTransfers(from, to, startTokenId, quantity);
+    }
+
+    function setTokenUsed(uint256 tokenId) public onlyOwner {
+        if(ownerOf(tokenId) == address(0)) {
+            revert TokenIsNotOwned(tokenId);
+        }
+        if(tokenUsed[tokenId]) {
+            revert TokenAlreadyUsed(tokenId);
+        }
+        tokenUsed[tokenId] = true;
+
+        emit TokenUsed(tokenId);
+    }
     /**
      * @notice Update the allowed SeaDrop contracts.
      *         Only the owner or administrator can use this function.
@@ -219,6 +253,12 @@ contract ERC721SeaDrop is
         // Ensure the SeaDrop is allowed.
         _onlyAllowedSeaDrop(msg.sender);
 
+        if(quantity > maxBatch()) {
+            revert MintQuantityExceedsMaxBatch (
+                quantity,
+                maxBatch()
+            );
+        }
         // Extra safety check to ensure the max supply is not exceeded.
         if (_totalMinted() + quantity > maxSupply()) {
             revert MintQuantityExceedsMaxSupply(

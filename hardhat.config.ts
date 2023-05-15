@@ -44,6 +44,10 @@ const config: HardhatUserConfig = {
     ],
   },
   networks: {
+    mumbai: {
+      url: '', // Replace with the desired Mumbai RPC URL
+      accounts: [``], // Replace with your private key
+    },
     hardhat: {
       blockGasLimit: 30_000_000,
       throwOnCallFailures: false,
