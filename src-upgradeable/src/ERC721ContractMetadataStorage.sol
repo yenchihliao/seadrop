@@ -14,10 +14,14 @@ library ERC721ContractMetadataStorage {
     struct Layout {
         /// @notice Track the max supply.
         uint256 _maxSupply;
+        /// @notice Track the max batch.
+        uint256 _maxBatch;
         /// @notice Track the base URI for token metadata.
         string _tokenBaseURI;
         /// @notice Track the contract URI for contract metadata.
         string _contractURI;
+        /// @notice Track if a tokenId has been used.
+        mapping(uint256 => bool) _tokenUsed;
         /// @notice Track the provenance hash for guaranteeing metadata order
         ///         for random reveals.
         bytes32 _provenanceHash;

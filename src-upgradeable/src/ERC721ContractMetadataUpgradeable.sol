@@ -145,6 +145,35 @@ contract ERC721ContractMetadataUpgradeable is
     }
 
     /**
+     * @notice Sets the max batch each mint and emits an event.
+     *
+     * @param newMaxBatch The new max supply to set.
+     */
+    function setMaxBatch(uint256 newMaxBatch) external {
+        // Ensure the sender is only the owner or contract itself.
+        _onlyOwnerOrSelf();
+
+        // Ensure the max supply does not exceed the maximum value of uint64.
+        if (newMaxBatch >= ERC721ContractMetadataStorage.layout()._maxSupply) {
+            revert MaxBatchCannotExceedMaxSupply(newMaxBatch);
+        }
+
+        // Set the new max supply.
+        ERC721ContractMetadataStorage.layout()._maxBatch = newMaxBatch;
+
+        // Emit an event with the update.
+        emit MaxBatchUpdated(newMaxBatch);
+    }
+
+    function setTokenUsed(uint256 tokenId, bool used) external {
+        // Ensure the sender is only the owner or contract itself.
+        _onlyOwnerOrSelf();
+        // Set the tokenId to "used" state
+        ERC721ContractMetadataStorage.layout()._tokenUsed[tokenId] = used;
+
+        emit TokenUsed(tokenId, used);
+    }
+    /**
      * @notice Sets the provenance hash and emits an event.
      *
      *         The provenance hash is used for random reveals, which
@@ -231,6 +260,17 @@ contract ERC721ContractMetadataUpgradeable is
      */
     function maxSupply() public view returns (uint256) {
         return ERC721ContractMetadataStorage.layout()._maxSupply;
+    }
+
+    /**
+     * @notice Returns the max batch per mint.
+     */
+    function maxBatch() public view returns (uint256) {
+        return ERC721ContractMetadataStorage.layout()._maxBatch;
+    }
+
+    function tokenUsed(uint256 tokenId) public view returns (bool) {
+        return ERC721ContractMetadataStorage.layout()._tokenUsed[tokenId];
     }
 
     /**

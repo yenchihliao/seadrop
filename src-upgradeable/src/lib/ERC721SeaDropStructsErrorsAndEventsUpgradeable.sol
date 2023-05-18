@@ -13,6 +13,10 @@ interface ERC721SeaDropStructsErrorsAndEventsUpgradeable {
    * @notice Revert with an error if mint exceeds the max supply.
    */
   error MintQuantityExceedsMaxSupply(uint256 total, uint256 maxSupply);
+  error MintQuantityExceedsMaxBatch(uint256 total, uint256 maxBatch);
+
+  error TokenIsNotOwned(uint256 tokenId);
+  error TokenAlreadyUsed(uint256 tokenId);
 
   /**
    * @notice Revert with an error if the number of token gated 

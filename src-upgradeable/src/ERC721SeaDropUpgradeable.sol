@@ -41,6 +41,10 @@ import {
     ERC721ContractMetadataStorage
 } from "./ERC721ContractMetadataStorage.sol";
 
+// import {
+//     PausableUpgradeable
+// } from "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+
 /**
  * @title  ERC721SeaDropUpgradeable
  * @author James Wenzel (emo.eth)
@@ -54,6 +58,7 @@ contract ERC721SeaDropUpgradeable is
     INonFungibleSeaDropTokenUpgradeable,
     ERC721SeaDropStructsErrorsAndEventsUpgradeable,
     ReentrancyGuardUpgradeable,
+    // PausableUpgradeable,
     DefaultOperatorFiltererUpgradeable
 {
     using ERC721SeaDropStorage for ERC721SeaDropStorage.Layout;
@@ -88,6 +93,7 @@ contract ERC721SeaDropUpgradeable is
         __ReentrancyGuard_init_unchained();
         __DefaultOperatorFilterer_init();
         __ERC721SeaDrop_init_unchained(name, symbol, allowedSeaDrop);
+        // __Pausable_init_unchained();
     }
 
     function __ERC721SeaDrop_init_unchained(
@@ -118,6 +124,32 @@ contract ERC721SeaDropUpgradeable is
         emit SeaDropTokenDeployed();
     }
 
+    // function emergencyPause() public onlyOwner {
+    //     _pause();
+    // }
+    // function emergencyUnpause() public onlyOwner {
+    //     _unpause();
+    // }
+    // function _beforeTokenTransfers(
+    //     address from,
+    //     address to,
+    //     uint256 startTokenId,
+    //     uint256 quantity
+    // ) internal override whenNotPaused {
+    //     super._beforeTokenTransfers(from, to, startTokenId, quantity);
+    // }
+
+    function setTokenToUsed(uint256 tokenId) public onlyOwner {
+        if(ownerOf(tokenId) == address(0)) {
+            revert TokenIsNotOwned(tokenId);
+        }
+        if(tokenUsed(tokenId)) {
+            revert TokenAlreadyUsed(tokenId);
+        }
+        this.setTokenUsed(tokenId, true);
+    }
+
+    /**
     /**
      * @notice Update the allowed SeaDrop contracts.
      *         Only the owner or administrator can use this function.
@@ -257,6 +289,14 @@ contract ERC721SeaDropUpgradeable is
                 _totalMinted() + quantity,
                 maxSupply()
             );
+        }
+        if(maxBatch() != 0) {
+            if(maxBatch() < quantity) {
+                revert MintQuantityExceedsMaxBatch(
+                    quantity,
+                    maxBatch()
+                );
+            }
         }
 
         // Mint the quantity of tokens to the minter.

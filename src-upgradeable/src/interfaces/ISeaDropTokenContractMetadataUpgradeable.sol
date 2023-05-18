@@ -11,6 +11,7 @@ interface ISeaDropTokenContractMetadataUpgradeable is IERC2981Upgradeable {
      *         due to the storage of bit-packed variables in ERC721A.
      */
     error CannotExceedMaxSupplyOfUint64(uint256 newMaxSupply);
+    error MaxBatchCannotExceedMaxSupply(uint256 newMaxBatch);
 
     /**
      * @dev Revert with an error when attempting to set the provenance
@@ -47,6 +48,16 @@ interface ISeaDropTokenContractMetadataUpgradeable is IERC2981Upgradeable {
      * @dev Emit an event when the max token supply is updated.
      */
     event MaxSupplyUpdated(uint256 newMaxSupply);
+
+    /**
+     * @dev Emit an event when the max token supply is updated.
+     */
+    event MaxBatchUpdated(uint256 newMaxBatch);
+
+    /**
+     * @dev Emit an event when a tokenId is set to "used" state.
+     */
+    event TokenUsed(uint256 tokenId, bool used);
 
     /**
      * @dev Emit an event with the previous and new provenance hash after
@@ -87,6 +98,14 @@ interface ISeaDropTokenContractMetadataUpgradeable is IERC2981Upgradeable {
      * @param newMaxSupply The new max supply to set.
      */
     function setMaxSupply(uint256 newMaxSupply) external;
+
+    /**
+     * @notice Sets the token as used.
+     *
+     * @param tokenId The tokenId to be set.
+     * @param used Whether the token is used.
+     */
+    function setTokenUsed(uint256 tokenId, bool used) external;
 
     /**
      * @notice Sets the provenance hash and emits an event.
