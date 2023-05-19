@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
-import "../../../lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
+import "../../../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 /**
  * @author emo.eth

@@ -41,9 +41,9 @@ import {
     ERC721ContractMetadataStorage
 } from "./ERC721ContractMetadataStorage.sol";
 
-// import {
-//     PausableUpgradeable
-// } from "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import {
+    PausableUpgradeable
+} from "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 
 /**
  * @title  ERC721SeaDropUpgradeable
@@ -58,7 +58,7 @@ contract ERC721SeaDropUpgradeable is
     INonFungibleSeaDropTokenUpgradeable,
     ERC721SeaDropStructsErrorsAndEventsUpgradeable,
     ReentrancyGuardUpgradeable,
-    // PausableUpgradeable,
+    PausableUpgradeable,
     DefaultOperatorFiltererUpgradeable
 {
     using ERC721SeaDropStorage for ERC721SeaDropStorage.Layout;
@@ -93,7 +93,7 @@ contract ERC721SeaDropUpgradeable is
         __ReentrancyGuard_init_unchained();
         __DefaultOperatorFilterer_init();
         __ERC721SeaDrop_init_unchained(name, symbol, allowedSeaDrop);
-        // __Pausable_init_unchained();
+        __Pausable_init_unchained();
     }
 
     function __ERC721SeaDrop_init_unchained(

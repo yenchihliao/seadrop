@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import { TwoStepOwnableUpgradeable } from "./TwoStepOwnableUpgradeable.sol";
 import { TwoStepAdministeredStorage } from "./TwoStepAdministeredStorage.sol";
-import "../../../lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
+import "../../../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 contract TwoStepAdministeredUpgradeable is
     Initializable,

@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import { IOperatorFilterRegistry } from "../IOperatorFilterRegistry.sol";
-import {
-    Initializable
-} from "../../../../lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
+import {IOperatorFilterRegistry} from "../IOperatorFilterRegistry.sol";
+import "../../../../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 /**
  * @title  OperatorFiltererUpgradeable
@@ -22,26 +20,20 @@ abstract contract OperatorFiltererUpgradeable is Initializable {
         IOperatorFilterRegistry(0x000000000000AAeB6D7670E522A718067333cd4E);
 
     /// @dev The upgradeable initialize function that should be called when the contract is being upgraded.
-    function __OperatorFilterer_init(
-        address subscriptionOrRegistrantToCopy,
-        bool subscribe
-    ) internal onlyInitializing {
+    function __OperatorFilterer_init(address subscriptionOrRegistrantToCopy, bool subscribe)
+        internal
+        onlyInitializing
+    {
         // If an inheriting token contract is deployed to a network without the registry deployed, the modifier
         // will not revert, but the contract will need to be registered with the registry once it is deployed in
         // order for the modifier to filter addresses.
         if (address(OPERATOR_FILTER_REGISTRY).code.length > 0) {
             if (!OPERATOR_FILTER_REGISTRY.isRegistered(address(this))) {
                 if (subscribe) {
-                    OPERATOR_FILTER_REGISTRY.registerAndSubscribe(
-                        address(this),
-                        subscriptionOrRegistrantToCopy
-                    );
+                    OPERATOR_FILTER_REGISTRY.registerAndSubscribe(address(this), subscriptionOrRegistrantToCopy);
                 } else {
                     if (subscriptionOrRegistrantToCopy != address(0)) {
-                        OPERATOR_FILTER_REGISTRY.registerAndCopyEntries(
-                            address(this),
-                            subscriptionOrRegistrantToCopy
-                        );
+                        OPERATOR_FILTER_REGISTRY.registerAndCopyEntries(address(this), subscriptionOrRegistrantToCopy);
                     } else {
                         OPERATOR_FILTER_REGISTRY.register(address(this));
                     }
@@ -80,12 +72,7 @@ abstract contract OperatorFiltererUpgradeable is Initializable {
             // under normal circumstances, this function will revert rather than return false, but inheriting or
             // upgraded contracts may specify their own OperatorFilterRegistry implementations, which may behave
             // differently
-            if (
-                !OPERATOR_FILTER_REGISTRY.isOperatorAllowed(
-                    address(this),
-                    operator
-                )
-            ) {
+            if (!OPERATOR_FILTER_REGISTRY.isOperatorAllowed(address(this), operator)) {
                 revert OperatorNotAllowed(operator);
             }
         }
