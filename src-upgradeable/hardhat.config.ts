@@ -18,9 +18,13 @@ module.exports = {
     ],
   },
   networks: {
-    goerli: {
-      url: process.env.RPC_URL_GOERLI,
-      accounts: [process.env.PRIVATE_KEY],
+    test: {
+      url: 'https://testnet-rpc.vegas.one', // Replace with the desired Mumbai RPC URL
+      accounts: [``], // Replace with your private key
+    },
+    mumbai: {
+      url: 'https://polygon-mumbai.infura.io/v3/', // Replace with the desired Mumbai RPC URL
+      accounts: [``], // Replace with your private key
     },
   },
   etherscan: {
