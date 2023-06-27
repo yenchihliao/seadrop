@@ -5,7 +5,7 @@ async function main() {
     const [deployer] = await ethers.getSigners()
     // console.log(deployer.address);
 
-    const NFT = await ethers.getContractAt('MetaDuetNFTv2', "0xb2a9D8A7DE2611eEba34AfD65Fd36063C9caCc50")
+    const NFT = await ethers.getContractAt('MetaDuetNFTv2', "0x8915571F2828e692BAFA0D6dE5C4667d095695bB")
 
     let tx, rc;
     // console.log(await NFT.maxSupply());

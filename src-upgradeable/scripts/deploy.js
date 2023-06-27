@@ -4,12 +4,12 @@ async function main() {
     const [deployer] = await ethers.getSigners()
     // console.log(deployer.address);
 
-    const NFTConFac = await ethers.getContractFactory('MetaDuetNFT')
+    const NFTConFac = await ethers.getContractFactory('MetaDuetNFTv2')
 
     const NFT = await upgrades.deployProxy(
       NFTConFac,
       [
-        "MetaDuet NFT",
+        "MetaDuet EA NFT",
         "MetaDuet",
         ["0x00005EA00Ac477B1030CE78506496e8C2dE24bf5"]
       ]
